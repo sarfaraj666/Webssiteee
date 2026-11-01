@@ -757,14 +757,20 @@ h1, h2, h3, h4, h5, h6 {
 .editorial-media {
   position: relative;
   overflow: hidden;
-  min-height: 520px;
-  background-color: var(--limestone);
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  min-height: 420px;
+  background-color: transparent;
+  border-radius: 2px;
 }
 
 .editorial-media img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -802,16 +808,21 @@ h1, h2, h3, h4, h5, h6 {
 .collection-media-wrap {
   position: relative;
   overflow: hidden;
+  width: 100%;
   min-height: 480px;
   height: 60vh;
   max-height: 680px;
-  background-color: var(--limestone);
+  background-color: transparent;
+  border-radius: 2px;
 }
 
 .collection-media-wrap img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -864,14 +875,18 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   overflow: hidden;
   height: 280px;
-  background-color: var(--limestone);
+  background-color: transparent;
   margin-bottom: 16px;
+  border-radius: 2px;
 }
 
 .swatch-photo img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -956,14 +971,18 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   height: 320px;
   overflow: hidden;
-  background-color: var(--limestone);
+  background-color: transparent;
   margin-bottom: 20px;
+  border-radius: 2px;
 }
 
 .model-image-wrap img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
