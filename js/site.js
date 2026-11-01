@@ -342,4 +342,62 @@
     el.textContent = new Date().getFullYear();
   });
 
+  // 10. IntersectionObserver for Fluid Section Reveal
+  if ('IntersectionObserver' in window) {
+    const revealTargets = document.querySelectorAll('.section, .editorial-story, .collection-feature, .model-card, .footer-top');
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      rootMargin: '0px 0px -50px 0px',
+      threshold: 0.08
+    });
+
+    revealTargets.forEach(el => {
+      el.classList.add('reveal-on-scroll');
+      revealObserver.observe(el);
+    });
+  } else {
+    document.querySelectorAll('.section, .editorial-story, .collection-feature, .model-card').forEach(el => {
+      el.classList.add('is-revealed');
+    });
+  }
+
+  // 11. Header-offset smooth navigation for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const targetId = this.getAttribute('href');
+      if (!targetId || targetId === '#') return;
+      const targetEl = document.querySelector(targetId);
+      if (targetEl) {
+        e.preventDefault();
+        const headerH = document.querySelector('.site-header')?.offsetHeight || 76;
+        const targetPos = targetEl.getBoundingClientRect().top + window.pageYOffset - (headerH - 6);
+        window.scrollTo({
+          top: Math.max(0, targetPos),
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+  // 12. Fluid page exit transition for local navigation
+  document.querySelectorAll('a[href]').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:') && !href.startsWith('http') && !link.target) {
+      link.addEventListener('click', (e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.defaultPrevented) return;
+        e.preventDefault();
+        document.body.classList.add('page-fade-out');
+        setTimeout(() => {
+          window.location.href = href;
+        }, 220);
+      });
+    }
+  });
+
 })();
