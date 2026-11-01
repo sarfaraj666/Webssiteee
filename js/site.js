@@ -205,7 +205,7 @@
     });
   }
 
-  // Helper to prefill form on current page or redirect to contact.html
+  // Helper to prefill form on current page or redirect to index.html#enquiry
   function prefillFormAndScroll(modelName) {
     const form = document.querySelector('form[data-lead-form]');
     if (form) {
@@ -219,7 +219,7 @@
       }
       form.scrollIntoView({ behavior: 'smooth' });
     } else {
-      window.location.href = `contact.html?model=${encodeURIComponent(modelName)}`;
+      window.location.href = `index.html?model=${encodeURIComponent(modelName)}#enquiry`;
     }
   }
 
