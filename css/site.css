@@ -528,17 +528,18 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.03);
 }
 
-/* Balanced cinematic overlay: preserves natural kitchen tones and architectural lighting */
+/* Cinematic architectural overlay: seamless light falloff without boxy containers */
 .hero-overlay {
   position: absolute;
   inset: 0;
+  pointer-events: none;
   background: 
-    /* Top vignette for transparent header readability */
-    linear-gradient(180deg, rgba(23, 21, 19, 0.75) 0%, rgba(23, 21, 19, 0.16) 22%, transparent 38%),
-    /* Subtle overall tone balance */
-    rgba(23, 21, 19, 0.1),
-    /* Bottom seamless fade into next section */
-    linear-gradient(0deg, #171513 0%, rgba(23, 21, 19, 0.8) 6%, transparent 18%);
+    /* Horizontal scrim: gentle shadow behind left typography that gracefully dissolves toward the sunset island */
+    linear-gradient(90deg, rgba(23, 21, 19, 0.88) 0%, rgba(23, 21, 19, 0.72) 32%, rgba(23, 21, 19, 0.32) 58%, rgba(23, 21, 19, 0.05) 82%, transparent 100%),
+    /* Top vignette for crystal-clear floating header navigation */
+    linear-gradient(180deg, rgba(23, 21, 19, 0.82) 0%, rgba(23, 21, 19, 0.25) 18%, transparent 35%),
+    /* Bottom seamless fade into the dark canvas */
+    linear-gradient(0deg, #171513 0%, rgba(23, 21, 19, 0.65) 8%, transparent 22%);
 }
 
 .hero-inner {
@@ -551,18 +552,19 @@ h1, h2, h3, h4, h5, h6 {
   padding-left: 0;
 }
 
+/* Open, unboxed luxury typography layout */
 .hero-content {
   position: relative;
   width: 100%;
-  max-width: 540px;
-  background: rgba(20, 18, 16, 0.62);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--divider-subtle);
-  border-radius: 4px;
-  padding: clamp(24px, 3vw, 42px);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
-  margin-top: -30px;
+  max-width: 620px;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  margin-top: 0;
 }
 
 .hero-eyebrow {
@@ -1567,9 +1569,13 @@ h1, h2, h3, h4, h5, h6 {
   :root {
     --gutter: 18px;
   }
+  .hero-overlay {
+    background: 
+      linear-gradient(180deg, rgba(23, 21, 19, 0.88) 0%, rgba(23, 21, 19, 0.65) 45%, rgba(23, 21, 19, 0.85) 100%);
+  }
   .hero-content {
     margin-top: 0;
-    padding: 24px 20px;
+    padding: 0;
     max-width: 100%;
   }
   .hero-title {
