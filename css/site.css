@@ -296,7 +296,13 @@ h1, h2, h3, h4, h5, h6 {
   background: transparent;
   border-bottom: 1px solid transparent;
   box-shadow: none;
-  transition: height var(--transition), background-color var(--transition), backdrop-filter var(--transition), border-color var(--transition);
+  transition: 
+    height 360ms cubic-bezier(0.16, 1, 0.3, 1), 
+    background-color 450ms cubic-bezier(0.22, 1, 0.36, 1), 
+    backdrop-filter 450ms ease, 
+    -webkit-backdrop-filter 450ms ease, 
+    border-color 450ms ease,
+    box-shadow 450ms ease;
 }
 
 /* Subtle top protective vignette for high contrast against photos */
@@ -305,9 +311,9 @@ h1, h2, h3, h4, h5, h6 {
   position: absolute;
   inset: 0;
   height: 130%;
-  background: linear-gradient(180deg, rgba(17, 15, 13, 0.8) 0%, rgba(17, 15, 13, 0.22) 65%, transparent 100%);
+  background: linear-gradient(180deg, rgba(17, 15, 13, 0.82) 0%, rgba(17, 15, 13, 0.2) 65%, transparent 100%);
   pointer-events: none;
-  transition: opacity var(--transition);
+  transition: opacity 400ms ease;
   z-index: -1;
 }
 
@@ -315,9 +321,10 @@ h1, h2, h3, h4, h5, h6 {
 .site-header.scrolled {
   height: var(--header-height-scrolled);
   background-color: rgba(23, 21, 19, 0.94);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--divider-subtle);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(182, 154, 104, 0.2);
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.5);
 }
 
 .site-header.scrolled::before {
@@ -530,6 +537,40 @@ h1, h2, h3, h4, h5, h6 {
   background-color: var(--deep-espresso);
 }
 
+/* Hero Cinematic Keyframe Reveals */
+@keyframes fealityHeroBgIn {
+  0% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fealityHeroFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fealityHeroGoldSettle {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .hero-media {
   position: absolute;
   inset: 0;
@@ -537,9 +578,8 @@ h1, h2, h3, h4, h5, h6 {
   height: 100%;
   background-size: cover;
   background-position: center 32%;
-  transform: scale(1.0);
-  transition: transform 12s cubic-bezier(0.1, 1, 0.1, 1);
-  will-change: transform;
+  animation: fealityHeroBgIn 1400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: transform, opacity;
 }
 
 .hero:hover .hero-media {
@@ -595,6 +635,7 @@ h1, h2, h3, h4, h5, h6 {
   display: block;
   margin-bottom: 1.125rem;
   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+  animation: fealityHeroFadeUp 850ms cubic-bezier(0.22, 1, 0.36, 1) 140ms backwards;
 }
 
 .hero-title {
@@ -607,13 +648,16 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--text-primary);
   text-shadow: 0 2px 18px rgba(0, 0, 0, 0.6);
   overflow-wrap: break-word;
+  animation: fealityHeroFadeUp 950ms cubic-bezier(0.22, 1, 0.36, 1) 280ms backwards;
 }
 
 .hero-title em {
+  display: inline-block;
   font-style: italic;
   font-weight: 400;
   color: var(--antique-gold);
   text-shadow: 0 2px 16px rgba(0, 0, 0, 0.6);
+  animation: fealityHeroGoldSettle 1050ms cubic-bezier(0.22, 1, 0.36, 1) 400ms backwards;
 }
 
 .hero-description {
@@ -624,6 +668,7 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 520px;
   margin: 0 0 2.25rem;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+  animation: fealityHeroFadeUp 850ms cubic-bezier(0.22, 1, 0.36, 1) 520ms backwards;
 }
 
 .hero-actions {
@@ -631,6 +676,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
+  animation: fealityHeroFadeUp 850ms cubic-bezier(0.22, 1, 0.36, 1) 640ms backwards;
 }
 
 /* Primary CTA: Champagne gold background with dark text */
@@ -1760,63 +1806,203 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ==========================================================================
-   SMOOTH REVEAL ANIMATIONS & PAGE TRANSITIONS
+   FEALITY ITALY — CINEMATIC SCROLL & FADE ANIMATION SYSTEM
    ========================================================================== */
+
+/* 1. Core Scroll-Triggered Fade & Upward Motion */
+.reveal,
 .reveal-on-scroll {
+  opacity: 1; /* Accessible default if JS inactive */
+  transform: none;
+}
+
+.js-motion .reveal,
+.js-motion .reveal-on-scroll {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(28px);
+  transition:
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
   will-change: opacity, transform;
 }
 
-.reveal-on-scroll.is-revealed {
+.js-motion .reveal.is-visible,
+.js-motion .reveal-on-scroll.is-revealed,
+.js-motion .reveal-on-scroll.is-visible {
   opacity: 1;
   transform: translateY(0);
 }
 
-.collection-media-wrap {
+/* 2. Heading Upward Reveals & Gold Italic Accent Timing */
+.js-motion .reveal .display-title,
+.js-motion .reveal .section-title {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 900ms cubic-bezier(0.22, 1, 0.36, 1) 60ms,
+    transform 900ms cubic-bezier(0.22, 1, 0.36, 1) 60ms;
+}
+
+.js-motion .reveal.is-visible .display-title,
+.js-motion .reveal.is-visible .section-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.js-motion .reveal .display-title em,
+.js-motion .reveal .section-title em {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 950ms cubic-bezier(0.22, 1, 0.36, 1) 180ms,
+    transform 950ms cubic-bezier(0.22, 1, 0.36, 1) 180ms;
+}
+
+.js-motion .reveal.is-visible .display-title em,
+.js-motion .reveal.is-visible .section-title em {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 3. Cinematic Architectural Image Reveal */
+.image-reveal {
   overflow: hidden;
+  position: relative;
 }
 
-.collection-media-wrap img,
-.collection-media-wrap .collection-media {
-  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
+.image-reveal img {
+  transform: scale(1);
+  transition:
+    transform 1200ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 850ms ease;
+  will-change: transform, opacity;
 }
 
+.js-motion .image-reveal img {
+  transform: scale(1.045);
+  opacity: 0.88;
+}
+
+.js-motion .image-reveal.is-visible img {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Interactive card media hover: subtle, restrained scale */
 .collection-feature:hover .collection-media-wrap img,
-.collection-feature:hover .collection-media-wrap .collection-media,
-.model-card:hover .model-card-media {
-  transform: scale(1.03);
+.editorial-media:hover img,
+.model-card:hover .model-image-wrap img,
+.swatch-item:hover .swatch-photo img {
+  transform: scale(1.03) !important;
 }
 
-/* Subtle page fade transition */
+/* 4. Refined Content Stagger Timing */
+.js-motion .editorial-text .eyebrow { transition-delay: 0ms; }
+.js-motion .editorial-text .display-title { transition-delay: 80ms; }
+.js-motion .editorial-text .lead-text { transition-delay: 180ms; }
+.js-motion .editorial-text .text-muted { transition-delay: 260ms; }
+.js-motion .editorial-text .text-link,
+.js-motion .editorial-text .btn { transition-delay: 340ms; }
+
+.js-motion .collection-info .collection-index { transition-delay: 0ms; }
+.js-motion .collection-info .collection-heading { transition-delay: 80ms; }
+.js-motion .collection-info .collection-summary { transition-delay: 180ms; }
+.js-motion .collection-info .text-link,
+.js-motion .collection-info .collection-link-arrow { transition-delay: 260ms; }
+
+/* Grid Staggers: Swatches, Models, Trust Cards, Process Steps */
+.js-motion .swatch-grid > *:nth-child(1),
+.js-motion .model-grid > *:nth-child(1),
+.js-motion .trust-grid > *:nth-child(1),
+.js-motion .process-grid > *:nth-child(1) { transition-delay: 0ms; }
+
+.js-motion .swatch-grid > *:nth-child(2),
+.js-motion .model-grid > *:nth-child(2),
+.js-motion .trust-grid > *:nth-child(2),
+.js-motion .process-grid > *:nth-child(2) { transition-delay: 110ms; }
+
+.js-motion .swatch-grid > *:nth-child(3),
+.js-motion .model-grid > *:nth-child(3),
+.js-motion .trust-grid > *:nth-child(3),
+.js-motion .process-grid > *:nth-child(3) { transition-delay: 220ms; }
+
+.js-motion .swatch-grid > *:nth-child(4),
+.js-motion .model-grid > *:nth-child(4),
+.js-motion .trust-grid > *:nth-child(4),
+.js-motion .process-grid > *:nth-child(4) { transition-delay: 330ms; }
+
+/* 5. Seamless Page Transitions */
 body {
   opacity: 1;
-  transition: opacity 0.25s ease;
+  transition: opacity 220ms ease;
 }
 
 body.page-fade-out {
   opacity: 0;
 }
 
-/* Accessibility: Reduced Motion */
+/* 6. Mobile Motion Optimizations */
+@media (max-width: 768px) {
+  .js-motion .reveal,
+  .js-motion .reveal-on-scroll {
+    transform: translateY(16px);
+    transition-duration: 700ms;
+  }
+
+  .js-motion .reveal .display-title,
+  .js-motion .reveal .section-title {
+    transform: translateY(12px);
+  }
+
+  .js-motion .reveal .display-title em,
+  .js-motion .reveal .section-title em {
+    transform: translateY(8px);
+    transition-delay: 80ms;
+  }
+
+  .js-motion .swatch-grid > *,
+  .js-motion .model-grid > *,
+  .js-motion .trust-grid > * {
+    transition-delay: 0ms !important;
+  }
+}
+
+/* 7. Accessibility: Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: auto;
+    scroll-behavior: auto !important;
   }
-  .reveal-on-scroll {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-  }
-  body {
-    transition: none !important;
-  }
+
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .hero-media,
+  .hero-eyebrow,
+  .hero-title,
+  .hero-title em,
+  .hero-description,
+  .hero-actions {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .js-motion .reveal,
+  .js-motion .reveal-on-scroll,
+  .js-motion .reveal.is-visible,
+  .js-motion .image-reveal img,
+  .js-motion .image-reveal.is-visible img {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  body {
+    transition: none !important;
   }
 }

@@ -342,28 +342,111 @@
     el.textContent = new Date().getFullYear();
   });
 
-  // 10. IntersectionObserver for Fluid Section Reveal
-  if ('IntersectionObserver' in window) {
-    const revealTargets = document.querySelectorAll('.section, .editorial-story, .collection-feature, .model-card, .footer-top');
-    const revealObserver = new IntersectionObserver((entries, observer) => {
+  // 10. FEALITY Premium Cinematic Scroll & Reveal System
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.documentElement.classList.add(prefersReducedMotion ? 'reduced-motion' : 'js-motion');
+
+  if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+    // A. Query all key semantic sections and modular components
+    const revealSelectors = [
+      '.reveal',
+      '.editorial-story',
+      '.collection-feature',
+      '.swatch-grid',
+      '.swatch-item',
+      '.model-card',
+      '.trust-card',
+      '.process-step',
+      '.faq-item',
+      '.section-header',
+      '.form-section-wrap',
+      '.cta-banner-content',
+      '.footer-top',
+      '.quote-block',
+      '.material-card'
+    ].join(', ');
+
+    const revealElements = document.querySelectorAll(revealSelectors);
+
+    // Attach .reveal and .image-reveal classes where appropriate
+    revealElements.forEach(el => {
+      if (!el.classList.contains('reveal')) {
+        el.classList.add('reveal');
+      }
+    });
+
+    const mediaWrappers = document.querySelectorAll('.editorial-media, .collection-media-wrap, .model-image-wrap, .swatch-photo');
+    mediaWrappers.forEach(media => {
+      if (!media.classList.contains('image-reveal')) {
+        media.classList.add('image-reveal');
+      }
+    });
+
+    // B. IntersectionObserver with generous bounds for natural entrance and reversible re-entry
+    // Generous rootMargin ensures reading is never disrupted or blinking
+    const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('is-revealed');
-          observer.unobserve(entry.target);
+          entry.target.classList.add('is-visible');
+        } else {
+          // Reversible exit & re-entry: only remove when element is scrolled completely past viewport margins
+          const rect = entry.boundingClientRect;
+          const isFarAbove = rect.bottom < -80;
+          const isFarBelow = rect.top > window.innerHeight + 80;
+          if (isFarAbove || isFarBelow) {
+            entry.target.classList.remove('is-visible');
+          }
         }
       });
     }, {
-      rootMargin: '0px 0px -50px 0px',
-      threshold: 0.08
+      rootMargin: '60px 0px -40px 0px',
+      threshold: [0, 0.08]
     });
 
-    revealTargets.forEach(el => {
-      el.classList.add('reveal-on-scroll');
-      revealObserver.observe(el);
-    });
+    revealElements.forEach(el => revealObserver.observe(el));
+    mediaWrappers.forEach(media => revealObserver.observe(media));
+
+    // C. Subtle Architectural Parallax on Desktop
+    const isDesktop = window.matchMedia('(min-width: 992px)').matches;
+    if (isDesktop) {
+      const heroMedia = document.querySelector('.hero-media');
+      const parallaxImages = document.querySelectorAll('.editorial-media img');
+
+      let ticking = false;
+      const updateParallax = () => {
+        const scrollY = window.pageYOffset || window.scrollY;
+
+        // Hero background gentle slide (16% speed, capped to avoid image borders)
+        if (heroMedia && scrollY < window.innerHeight * 1.2) {
+          const heroOffset = Math.min(60, scrollY * 0.16);
+          heroMedia.style.transform = `translate3d(0, ${heroOffset.toFixed(1)}px, 0)`;
+        }
+
+        // Editorial media subtle depth relative to viewport center
+        parallaxImages.forEach(img => {
+          const rect = img.parentElement.getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            const centerY = rect.top + rect.height / 2;
+            const diffFromCenter = centerY - window.innerHeight / 2;
+            const imgOffset = Math.max(-18, Math.min(18, diffFromCenter * 0.04));
+            img.style.transform = `translate3d(0, ${imgOffset.toFixed(1)}px, 0) scale(1)`;
+          }
+        });
+
+        ticking = false;
+      };
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(updateParallax);
+          ticking = true;
+        }
+      }, { passive: true });
+    }
   } else {
-    document.querySelectorAll('.section, .editorial-story, .collection-feature, .model-card').forEach(el => {
-      el.classList.add('is-revealed');
+    // Reduced motion or fallback: everything visible immediately
+    document.querySelectorAll('.reveal, .editorial-story, .collection-feature, .model-card').forEach(el => {
+      el.classList.add('is-visible');
     });
   }
 
@@ -385,7 +468,7 @@
     });
   });
 
-  // 12. Fluid page exit transition for local navigation
+  // 12. Fluid page exit transition for local navigation (with bfcache safety)
   document.querySelectorAll('a[href]').forEach(link => {
     const href = link.getAttribute('href');
     if (href && !href.startsWith('#') && !href.startsWith('mailto:') && !href.startsWith('tel:') && !href.startsWith('http') && !link.target) {
@@ -397,6 +480,13 @@
           window.location.href = href;
         }, 220);
       });
+    }
+  });
+
+  // Handle browser back/forward cache to prevent blank faded page
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+      document.body.classList.remove('page-fade-out');
     }
   });
 
