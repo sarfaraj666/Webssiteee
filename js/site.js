@@ -12,7 +12,7 @@
   const businessEmail = String(CONFIG.email || CONFIG.businessEmail || '').trim();
 
   // 1. Mobile Menu Toggle
-  const menuToggle = document.querySelector('.menu-toggle');
+  const menuToggle = document.querySelector('.menu-btn') || document.querySelector('.menu-toggle');
   const mobileDrawer = document.querySelector('.mobile-drawer');
 
   if (menuToggle && mobileDrawer) {
